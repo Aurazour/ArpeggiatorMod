@@ -148,25 +148,16 @@ void AMAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mid
     // We use the audio buffer to get timing information
     auto numSamples = buffer.getNumSamples();                                                       // [7]
 
-    //Hello whoever is looking at my code
-    
-
-    // get note duration
-    //index will be determined by user
-    //auto noteDuration = static_cast<int> (std::ceil (rate * 0.25f * (0.1f + (1.0f - (timestamps[speedcounter])))));   // [8]]
     auto noteDuration = static_cast<int> (std::ceil(rate * 0.25f * (0.1f + (1.0f - arpSpeed))));
 
     if (speedcounter == 0) {
         noteDuration = static_cast<int> (std::ceil(rate * 0.25f * (0.1f + (1.0f - arpSpeed))));
-        //speedcounter++;
     }
     else if (speedcounter == 1) {
         noteDuration = static_cast<int> (std::ceil(rate * 0.25f * (0.1f + (1.0f - arpSpeed2))));
-        //speedcounter++;
     }
     else if (speedcounter == 2) {
         noteDuration = static_cast<int> (std::ceil(rate * 0.25f * (0.1f + (1.0f - arpSpeed3))));
-        //speedcounter = 0;
     }
     
     //originally that was arpspeed
@@ -174,8 +165,7 @@ void AMAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mid
     //ok somehow. We need to have arpspeeds as the array and then for each note we loop through arpspeeds????
     
 
-    //task 2 - this is what we're modifying for task 2: the notes we're adding is gonna change based on octave
-    //somehow probably do getnotenumber+12 for as mnay times over as possible
+    //the notes we're adding is gonna change based on octave
     int counter = 1; 
     for (const auto metadata : midi)                                                                // [9]
     {
@@ -210,8 +200,7 @@ void AMAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mid
     midi.clear();                                                                                   // [10]
 
 
-    //add some way to switch which of these it goes through. This one right here is the default
-    //FOR MY SAKE: 0 is asending 1 is descending 2 is play base note 4 is staggered pattern
+    //0 is asending 1 is descending 2 is play base note 4 is staggered pattern
     if (direction == 0) {//pattern: ABCDABCD
         if ((time + numSamples) >= noteDuration)                                                        // [11]
         {
@@ -235,7 +224,6 @@ void AMAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mid
         }
     }
     else if (direction == 1) {//pattern: DCBADCBA
-        //we are attempting to make a descending version with me luck
         if ((time + numSamples) >= noteDuration)                                                        // [11]
         {
             auto offset = juce::jmax(0, juce::jmin((int)(noteDuration - time), numSamples - 1));     // [12]
@@ -272,7 +260,6 @@ void AMAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mid
             if (notes.size() > 0)                                                                       // [14]
             {
                 
-                //currentNote = (currentNote + 1) % notes.size();
 
                 if (baseNote) { //this is the note that goes inbetween the other note
                     //we check if we have played a note already in the sequence and tack in on infront of it
@@ -321,8 +308,6 @@ void AMAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mid
 
         }
     }
-    
-    //MAKE SURE THIS THING IS STILL HERE
 
     time = (time + numSamples) % noteDuration;                                                      // [15]
 
