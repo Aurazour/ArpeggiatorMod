@@ -1,5 +1,5 @@
-# arpeggiatorMod
-JUCE midi plug-in that provides additional functions on top of the tutorial code
+# ArpeggiatorMod
+JUCE midi plug-in that provides additional functions on top of the tutorial code. Originally written for class
 
 ### Functionalities:
 
